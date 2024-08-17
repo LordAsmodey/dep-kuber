@@ -43,12 +43,9 @@ jobs:
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
-      - name: Set up Kubernetes credentials
-        run: |
-          kubectl config set-cluster my-cluster --server=${{ secrets.KUBE_SERVER }} --certificate-authority=/path/to/ca.crt
-          kubectl config set-credentials my-user --token=${{ secrets.KUBE_TOKEN }}
-          kubectl config set-context my-context --cluster=my-cluster --user=my-user --namespace=default
-          kubectl config use-context my-context
+
+      - name: Verify kubectl configuration
+        run: kubectl config view --raw
 
       - name: Apply Kubernetes manifests
         run: kubectl apply -f k8s/deployment.yml

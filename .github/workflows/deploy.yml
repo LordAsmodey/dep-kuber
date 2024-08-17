@@ -39,6 +39,10 @@ jobs:
         with:
           version: 'latest'
 
+      - name: Configure kubectl
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
       - name: Set up Kubernetes credentials
         run: |
           kubectl config set-cluster my-cluster --server=${{ secrets.KUBE_SERVER }} --certificate-authority=/path/to/ca.crt

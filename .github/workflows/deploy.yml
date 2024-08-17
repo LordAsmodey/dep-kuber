@@ -35,9 +35,9 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/my-react-app:latest
 
       - name: Deploy to Kubernetes
-        uses: azure/setup-kubectl@v1
+        uses: azure/setup-kubectl@v4
         with:
-          version: '1.24.0'
+          version: 'latest'
 
       - name: Set up Kubernetes credentials
         run: |

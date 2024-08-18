@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-react-app
+  labels:
+    app: my-react-app
 spec:
   replicas: 2
   selector:
@@ -14,7 +16,7 @@ spec:
     spec:
       containers:
         - name: my-react-app
-          image: ${{ secrets.DOCKER_USERNAME }}/my-react-app:latest
+          image: <your-dockerhub-username>/my-react-app:latest
           ports:
             - containerPort: 80
 ---
@@ -29,5 +31,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-      nodePort: 30007
-  type: NodePort
+  type: LoadBalancer

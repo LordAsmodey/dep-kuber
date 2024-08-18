@@ -34,18 +34,16 @@ jobs:
           docker tag my-react-app:latest ${{ secrets.DOCKER_USERNAME }}/my-react-app:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/my-react-app:latest
 
-      - name: Deploy to Kubernetes
-        uses: azure/setup-kubectl@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          version: 'latest'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Configure kubectl
+      - name: Update kubeconfig
+        run: aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+      - name: Deploy to Kubernetes
         run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
-
-      - name: Verify kubectl configuration
-        run: kubectl config view --raw
-
-      - name: Apply Kubernetes manifests
-        run: kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/deployment.yml
